@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "GymServer",
+      "request": "launch",
+      "mainClass": "com.gym.server.GymServer",
+      "projectName": "GymManagementSystem-2_684ec00b"
+    },
+    {
+      "type": "java",
+      "name": "Run GymServer",
+      "request": "launch",
+      "mainClass": "com.gym.server.GymServer",
+      "projectName": "GymManagementSystem",
+      "classPaths": [
+        "${workspaceFolder}/out",
+        "${workspaceFolder}/lib/mysql-connector-j.jar"
+      ],
+      "sourcePaths": ["${workspaceFolder}/src"]
+    }
+  ]
+}

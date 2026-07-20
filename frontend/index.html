@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IronPulse Gym</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ═══════════════════════ NAV ════════════════════════════════ -->
+<nav id="navbar" class="hidden">
+  <div class="nav-brand"><span>IRON</span>PULSE</div>
+  <div class="nav-links">
+    <button onclick="showPage('dashboard')" class="nav-btn">Dashboard</button>
+    <button onclick="showPage('bookSlot')"  class="nav-btn">Book Slot</button>
+    <button onclick="showPage('myBookings')" class="nav-btn">My Bookings</button>
+    <span id="adminNav" class="hidden">
+      <button onclick="showPage('adminPanel')" class="nav-btn admin-btn">Admin</button>
+    </span>
+    <span id="userLabel" class="nav-user"></span>
+    <button onclick="logout()" class="nav-btn logout-btn">Logout</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════ AUTH PAGE ══════════════════════════ -->
+<div id="authPage" class="page auth-page">
+  <div class="auth-hero">
+    <h1 class="brand">IRON<span>PULSE</span></h1>
+    <p class="tagline">FORGE YOUR LIMITS</p>
+  </div>
+
+  <div class="auth-card">
+    <div class="tab-switch">
+      <button class="tab active" onclick="switchTab('login')">Login</button>
+      <button class="tab" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- Login -->
+    <div id="loginForm">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" />
+      </div>
+      <button class="btn-primary" onclick="login()">Login</button>
+      <p id="loginMsg" class="msg"></p>
+    </div>
+
+    <!-- Register -->
+    <div id="registerForm" class="hidden">
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="regName" placeholder="John Doe" />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="regEmail" placeholder="you@example.com" />
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input type="tel" id="regPhone" placeholder="9876543210" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="regPassword" placeholder="••••••••" />
+      </div>
+      <button class="btn-primary" onclick="register()">Create Account</button>
+      <p id="regMsg" class="msg"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ DASHBOARD ══════════════════════════ -->
+<div id="dashboardPage" class="page hidden">
+  <div class="page-header">
+    <h2>Welcome back, <span id="dashName"></span></h2>
+    <p>Track your sessions and stay on schedule.</p>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num" id="statTotal">—</div>
+      <div class="stat-label">Total Bookings</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statConfirmed">—</div>
+      <div class="stat-label">Confirmed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statCancelled">—</div>
+      <div class="stat-label">Cancelled</div>
+    </div>
+  </div>
+  <div class="section-title">Upcoming Sessions</div>
+  <div id="upcomingList" class="booking-list"></div>
+</div>
+
+<!-- ═══════════════════════ BOOK SLOT ══════════════════════════ -->
+<div id="bookSlotPage" class="page hidden">
+  <div class="page-header">
+    <h2>Book a Slot</h2>
+    <p>Pick a date and reserve your spot before it fills up.</p>
+  </div>
+  <div class="date-picker-row">
+    <label>Select Date</label>
+    <input type="date" id="slotDate" onchange="loadSlots()" />
+  </div>
+  <div id="slotsGrid" class="slots-grid"></div>
+</div>
+
+<!-- ═══════════════════════ MY BOOKINGS ════════════════════════ -->
+<div id="myBookingsPage" class="page hidden">
+  <div class="page-header">
+    <h2>My Bookings</h2>
+    <p>View and manage all your reservations.</p>
+  </div>
+  <div id="myBookingsList" class="booking-list"></div>
+</div>
+
+<!-- ═══════════════════════ ADMIN PANEL ════════════════════════ -->
+<div id="adminPanelPage" class="page hidden">
+  <div class="page-header">
+    <h2>Admin Panel</h2>
+    <p>Manage members, slots, and bookings.</p>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="tab active" onclick="adminTab('members')">Members</button>
+    <button class="tab" onclick="adminTab('slots')">Slots</button>
+    <button class="tab" onclick="adminTab('allBookings')">All Bookings</button>
+  </div>
+
+  <!-- Members -->
+  <div id="membersSection">
+    <table class="data-table" id="membersTable">
+      <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Joined</th><th>Action</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Slots -->
+  <div id="slotsSection" class="hidden">
+    <div class="add-slot-form">
+      <h3>Add New Slot</h3>
+      <div class="field-row">
+        <div class="field"><label>Slot Name</label><input type="text" id="newSlotName" placeholder="Morning Batch" /></div>
+        <div class="field"><label>Date</label><input type="date" id="newSlotDate" /></div>
+        <div class="field"><label>Start Time</label><input type="time" id="newSlotStart" /></div>
+        <div class="field"><label>End Time</label><input type="time" id="newSlotEnd" /></div>
+        <div class="field"><label>Max Capacity</label><input type="number" id="newSlotCap" value="20" min="1" /></div>
+      </div>
+      <button class="btn-primary" onclick="addSlot()">Add Slot</button>
+      <p id="slotMsg" class="msg"></p>
+    </div>
+    <table class="data-table" id="slotsTable">
+      <thead><tr><th>ID</th><th>Name</th><th>Date</th><th>Time</th><th>Booked/Max</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- All Bookings -->
+  <div id="allBookingsSection" class="hidden">
+    <table class="data-table" id="allBookingsTable">
+      <thead><tr><th>ID</th><th>Member</th><th>Slot</th><th>Date</th><th>Time</th><th>Status</th><th>Booked At</th><th>Action</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TOAST ═══════════════════════════════ -->
+<div id="toast" class="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

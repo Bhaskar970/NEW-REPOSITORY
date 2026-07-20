@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build & Run Gym Server",
+      "type": "shell",
+      "command": "bash build.sh",
+      "windows": { "command": "build.bat" },
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "showReuseMessage": false
+      },
+      "problemMatcher": "$javac"
+    },
+    {
+      "label": "Compile Only",
+      "type": "shell",
+      "command": "mkdir -p out && find src -name '*.java' | xargs javac -cp lib/mysql-connector-j.jar -d out",
+      "windows": {
+        "command": "if not exist out mkdir out && dir /s /b src\\*.java > sources.txt && javac -cp lib\\mysql-connector-j.jar -d out @sources.txt && del sources.txt"
+      },
+      "group": "build",
+      "presentation": { "reveal": "always" },
+      "problemMatcher": "$javac"
+    }
+  ]
+}
